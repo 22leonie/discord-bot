@@ -1,4 +1,6 @@
 node_modules/
 .env
+*.env
+attached_assets/
 *.json
 !package.json
