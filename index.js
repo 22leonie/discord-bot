@@ -4230,30 +4230,43 @@ client.on('voiceStateUpdate', (oldState, newState) => {
 // EVENT: BOT PRÊT - Créer les salons vocaux
 // ==========================================
 client.on('ready', async () => {
+  console.log(`✅ Bot connecté en tant que ${client.user.tag}`);
   logger.info("BOT", `✅ Bot connecté en tant que ${client.user.tag}`);
 
-  const guild = client.guilds.cache.first();
-  if (!guild) {
-    logger.warn("BOT", "Aucun serveur trouvé");
-    return;
-  }
-
   try {
+    const guild = client.guilds.cache.first();
+    console.log(`📍 Serveur trouvé: ${guild ? guild.name : 'AUCUN'}`);
+    
+    if (!guild) {
+      console.log("❌ Aucun serveur trouvé!");
+      logger.warn("BOT", "Aucun serveur trouvé");
+      return;
+    }
+
+    console.log(`🔍 Cherche la catégorie '📊'...`);
+    
     // Chercher la catégorie "📊"
     let statsCategory = guild.channels.cache.find(c => c.type === ChannelType.GuildCategory && c.name === '📊');
     
     if (!statsCategory) {
+      console.log("📁 Catégorie '📊' non trouvée, création...");
       logger.warn("BOT", "Catégorie '📊' non trouvée, création...");
       statsCategory = await guild.channels.create({
         name: '📊',
         type: ChannelType.GuildCategory,
       });
+      console.log(`✅ Catégorie '📊' créée!`);
+    } else {
+      console.log(`✅ Catégorie '📊' trouvée!`);
     }
 
+    console.log(`🎙️ Création des salons vocaux...`);
+    
     // Créer/Récupérer salon vocal 1: "👥 Total : [nombre]"
     let totalVocal = guild.channels.cache.find(c => c.type === ChannelType.GuildVoice && c.name.startsWith('👥 Total'));
     
     if (!totalVocal) {
+      console.log(`📢 Création salon '👥 Total'...`);
       totalVocal = await guild.channels.create({
         name: `👥 Total : ${guild.memberCount}`,
         type: ChannelType.GuildVoice,
@@ -4270,8 +4283,10 @@ client.on('ready', async () => {
           }
         ],
       });
+      console.log(`✅ Salon vocal '👥 Total' créé!`);
       logger.info("BOT", "Salon vocal '👥 Total' créé");
     } else {
+      console.log(`✅ Salon '👥 Total' existe déjà!`);
       // Mettre à jour les permissions si le salon existe
       await totalVocal.permissionOverwrites.set([
         {
@@ -4290,6 +4305,7 @@ client.on('ready', async () => {
     let inviteVocal = guild.channels.cache.find(c => c.type === ChannelType.GuildVoice && c.name.includes('.gg/haven'));
     
     if (!inviteVocal) {
+      console.log(`📢 Création salon '🧷・.gg/haven'...`);
       inviteVocal = await guild.channels.create({
         name: '🧷・.gg/haven',
         type: ChannelType.GuildVoice,
@@ -4306,8 +4322,10 @@ client.on('ready', async () => {
           }
         ],
       });
+      console.log(`✅ Salon vocal '🧷・.gg/haven' créé!`);
       logger.info("BOT", "Salon vocal '🧷・.gg/haven' créé");
     } else {
+      console.log(`✅ Salon '🧷・.gg/haven' existe déjà!`);
       // Mettre à jour les permissions si le salon existe
       await inviteVocal.permissionOverwrites.set([
         {
@@ -4322,8 +4340,11 @@ client.on('ready', async () => {
       ]);
     }
 
+    console.log(`✅ Tous les salons vocaux configurés!`);
     logger.info("BOT", "Salons vocaux configurés avec succès");
   } catch (err) {
+    console.error(`❌ ERREUR: ${err.message}`);
+    console.error(err);
     logger.error("BOT", "Erreur lors de la création des salons vocaux", err);
   }
 
@@ -4340,6 +4361,7 @@ client.on('ready', async () => {
         await totalVocal.setName(`👥 Total : ${onlineMembers}`);
       }
     } catch (err) {
+      console.error(`❌ Erreur update: ${err.message}`);
       logger.debug("BOT", "Erreur lors de l'update du nombre en ligne", err.message);
     }
   }, 30000); // Toutes les 30 secondes
