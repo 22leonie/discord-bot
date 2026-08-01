@@ -147,7 +147,6 @@ async function sendLogToChannel(category, message, client) {
 // ==========================================
 
 const fs = require('fs');
-const path = require('path');
 
 // Chemin du fichier de blacklist
 const BLACKLIST_FILE = './blacklist.json';
