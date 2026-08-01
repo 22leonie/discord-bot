@@ -1,4 +1,5 @@
 const { sendSupportEmbed } = require('./embed-support-haven.js');
+const path = require('path');
 require("dotenv").config();
 
 // ==========================================
@@ -226,6 +227,26 @@ function getGuildStats(guildId) {
     statsData.guilds[guildId] = { members: {} };
   }
   return statsData.guilds[guildId];
+}
+
+// ==========================================
+// FONCTION: EMBED STATS SERVEUR (OWNER ONLY)
+// ==========================================
+async function createServerStatsEmbed(guild) {
+  const totalMembers = guild.memberCount;
+  const inviteUrl = "https://discord.gg/haven";
+  
+  const embed = new EmbedBuilder()
+    .setTitle(`🔒 Total : ${totalMembers}`)
+    .setColor(0x5865F2)
+    .setThumbnail(guild.iconURL({ dynamic: true }))
+    .addFields(
+      { name: "🔗 Lien d'invitation", value: inviteUrl, inline: false }
+    )
+    .setFooter({ text: "Stats du serveur Haven" })
+    .setTimestamp();
+  
+  return embed;
 }
 
 const snipeCache = new Map();
@@ -3190,6 +3211,27 @@ client.on("messageCreate", async (message) => {
       return;
     }
 
+    // ========== STATS SERVEUR (OWNER ONLY) ==========
+    if (message.content === '=stats') {
+      // Vérification: seulement l'owner du serveur
+      if (message.author.id !== message.guild.ownerId) {
+        return message.reply({
+          content: '❌ Seul l\'owner du serveur peut utiliser cette commande !',
+          ephemeral: true
+        });
+      }
+
+      try {
+        const embed = await createServerStatsEmbed(message.guild);
+        await message.reply({ embeds: [embed] });
+        logger.info('COMMAND', `=stats utilisée par ${message.author.tag} (Owner)`);
+      } catch (err) {
+        logger.error('COMMAND', 'Erreur dans =stats', err);
+        await message.reply('❌ Erreur lors de la récupération des stats');
+      }
+      return;
+    }
+
     // ========== BLACKLIST ==========
     if (message.content.startsWith('=bl') || message.content.startsWith('=unbl') || message.content.startsWith('=blinfo')) {
       console.log('🚫 Commande Blacklist détectée');
@@ -4111,14 +4153,14 @@ client.on("interactionCreate", async (interaction) => {
       }
 
       if (choice === "yes") {
-        const attachment = new AttachmentBuilder("./doro-oui.gif");
+        const attachment = new AttachmentBuilder(path.join(__dirname, "./doro-oui.gif"));
         await interaction.update({
           content: `${interaction.user} a accepté de doro avec <@${authorId}> !!`,
           components: [],
           files: [attachment],
         });
       } else {
-        const attachment = new AttachmentBuilder("./doro-non.gif");
+        const attachment = new AttachmentBuilder(path.join(__dirname, "./doro-non.gif"));
         await interaction.update({
           content: `${interaction.user} ne veut pas doro avec <@${authorId}>.. tu trouveras mieux`,
           components: [],
