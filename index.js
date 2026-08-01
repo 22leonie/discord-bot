@@ -4239,13 +4239,13 @@ client.on('ready', async () => {
   }
 
   try {
-    // Chercher la catégorie "Information"
-    let infoCategory = guild.channels.cache.find(c => c.type === ChannelType.GuildCategory && c.name === 'Information');
+    // Chercher la catégorie "📊"
+    let statsCategory = guild.channels.cache.find(c => c.type === ChannelType.GuildCategory && c.name === '📊');
     
-    if (!infoCategory) {
-      logger.warn("BOT", "Catégorie 'Information' non trouvée, création...");
-      infoCategory = await guild.channels.create({
-        name: 'Information',
+    if (!statsCategory) {
+      logger.warn("BOT", "Catégorie '📊' non trouvée, création...");
+      statsCategory = await guild.channels.create({
+        name: '📊',
         type: ChannelType.GuildCategory,
       });
     }
@@ -4257,7 +4257,7 @@ client.on('ready', async () => {
       totalVocal = await guild.channels.create({
         name: `👥 Total : ${guild.memberCount}`,
         type: ChannelType.GuildVoice,
-        parent: infoCategory.id,
+        parent: statsCategory.id,
         permissionOverwrites: [
           {
             id: guild.id,
@@ -4293,7 +4293,7 @@ client.on('ready', async () => {
       inviteVocal = await guild.channels.create({
         name: '🧷・.gg/haven',
         type: ChannelType.GuildVoice,
-        parent: infoCategory.id,
+        parent: statsCategory.id,
         permissionOverwrites: [
           {
             id: guild.id,
