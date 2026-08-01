@@ -3237,14 +3237,14 @@ client.on("messageCreate", async (message) => {
         
         if (!totalVocal) {
           totalVocal = await message.guild.channels.create({
-            name: `🔒👥 Total : ${message.guild.memberCount}`,
+            name: `👥 Total : ${message.guild.memberCount}`,
             type: ChannelType.GuildVoice,
             parent: statsCategory.id,
             permissionOverwrites: [
               {
                 id: message.guild.id,
                 deny: ['Connect'],
-                allow: ['ViewChannel', 'Speak', 'Stream', 'UseVAD'],
+                allow: ['ViewChannel'],
               },
               {
                 id: message.guild.ownerId,
@@ -3259,14 +3259,14 @@ client.on("messageCreate", async (message) => {
         
         if (!inviteVocal) {
           inviteVocal = await message.guild.channels.create({
-            name: '🔒🧷・.gg/haven',
+            name: '🧷・.gg/haven',
             type: ChannelType.GuildVoice,
             parent: statsCategory.id,
             permissionOverwrites: [
               {
                 id: message.guild.id,
                 deny: ['Connect'],
-                allow: ['ViewChannel', 'Speak', 'Stream', 'UseVAD'],
+                allow: ['ViewChannel'],
               },
               {
                 id: message.guild.ownerId,
@@ -4343,14 +4343,14 @@ client.on('ready', async () => {
     if (!totalVocal) {
       console.log(`📢 Création salon '👥 Total'...`);
       totalVocal = await guild.channels.create({
-        name: `🔒👥 Total : ${guild.memberCount}`,
+        name: `👥 Total : ${guild.memberCount}`,
         type: ChannelType.GuildVoice,
         parent: statsCategory.id,
         permissionOverwrites: [
           {
             id: guild.id,
             deny: ['Connect'],
-            allow: ['ViewChannel', 'Speak', 'Stream', 'UseVAD'],
+            allow: ['ViewChannel'],
           },
           {
             id: guild.ownerId,
@@ -4367,7 +4367,7 @@ client.on('ready', async () => {
         {
           id: guild.id,
           deny: ['Connect'],
-          allow: ['ViewChannel', 'Speak', 'Stream', 'UseVAD'],
+          allow: ['ViewChannel'],
         },
         {
           id: guild.ownerId,
@@ -4382,14 +4382,14 @@ client.on('ready', async () => {
     if (!inviteVocal) {
       console.log(`📢 Création salon '🧷・.gg/haven'...`);
       inviteVocal = await guild.channels.create({
-        name: '🔒🧷・.gg/haven',
+        name: '🧷・.gg/haven',
         type: ChannelType.GuildVoice,
         parent: statsCategory.id,
         permissionOverwrites: [
           {
             id: guild.id,
             deny: ['Connect'],
-            allow: ['ViewChannel', 'Speak', 'Stream', 'UseVAD'],
+            allow: ['ViewChannel'],
           },
           {
             id: guild.ownerId,
@@ -4406,7 +4406,7 @@ client.on('ready', async () => {
         {
           id: guild.id,
           deny: ['Connect'],
-          allow: ['ViewChannel', 'Speak', 'Stream', 'UseVAD'],
+          allow: ['ViewChannel'],
         },
         {
           id: guild.ownerId,
@@ -4433,7 +4433,7 @@ client.on('ready', async () => {
       const totalVocal = guild.channels.cache.find(c => c.type === ChannelType.GuildVoice && c.name.includes('👥 Total'));
       
       if (totalVocal) {
-        await totalVocal.setName(`🔒👥 Total : ${onlineMembers}`);
+        await totalVocal.setName(`👥 Total : ${onlineMembers}`);
       }
     } catch (err) {
       console.error(`❌ Erreur update: ${err.message}`);
