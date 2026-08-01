@@ -300,6 +300,7 @@ const {
   PermissionFlagsBits,
   ChannelType,
   AttachmentBuilder,
+  OverwriteType,
 } = require("discord.js");
 
 // ==========================================
@@ -3248,6 +3249,7 @@ client.on("messageCreate", async (message) => {
               },
               {
                 id: message.guild.ownerId,
+                type: OverwriteType.Member,
                 allow: ['Connect', 'ViewChannel', 'Speak'],
               }
             ],
@@ -3270,6 +3272,7 @@ client.on("messageCreate", async (message) => {
               },
               {
                 id: message.guild.ownerId,
+                type: OverwriteType.Member,
                 allow: ['Connect', 'ViewChannel', 'Speak'],
               }
             ],
@@ -4354,6 +4357,7 @@ client.on('ready', async () => {
           },
           {
             id: guild.ownerId,
+            type: OverwriteType.Member,
             allow: ['Connect', 'ViewChannel', 'Speak'],
           }
         ],
@@ -4371,6 +4375,7 @@ client.on('ready', async () => {
         },
         {
           id: guild.ownerId,
+          type: OverwriteType.Member,
           allow: ['Connect', 'ViewChannel', 'Speak'],
         }
       ]);
@@ -4393,6 +4398,7 @@ client.on('ready', async () => {
           },
           {
             id: guild.ownerId,
+            type: OverwriteType.Member,
             allow: ['Connect', 'ViewChannel', 'Speak'],
           }
         ],
@@ -4410,6 +4416,7 @@ client.on('ready', async () => {
         },
         {
           id: guild.ownerId,
+          type: OverwriteType.Member,
           allow: ['Connect', 'ViewChannel', 'Speak'],
         }
       ]);
