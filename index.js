@@ -4226,6 +4226,125 @@ client.on('voiceStateUpdate', (oldState, newState) => {
   }
 });
 
+// ==========================================
+// EVENT: BOT PRÊT - Créer les salons vocaux
+// ==========================================
+client.on('ready', async () => {
+  logger.info("BOT", `✅ Bot connecté en tant que ${client.user.tag}`);
+
+  const guild = client.guilds.cache.first();
+  if (!guild) {
+    logger.warn("BOT", "Aucun serveur trouvé");
+    return;
+  }
+
+  try {
+    // Chercher la catégorie "Information"
+    let infoCategory = guild.channels.cache.find(c => c.type === ChannelType.GuildCategory && c.name === 'Information');
+    
+    if (!infoCategory) {
+      logger.warn("BOT", "Catégorie 'Information' non trouvée, création...");
+      infoCategory = await guild.channels.create({
+        name: 'Information',
+        type: ChannelType.GuildCategory,
+      });
+    }
+
+    // Créer/Récupérer salon vocal 1: "👥 Total : [nombre]"
+    let totalVocal = guild.channels.cache.find(c => c.type === ChannelType.GuildVoice && c.name.startsWith('👥 Total'));
+    
+    if (!totalVocal) {
+      totalVocal = await guild.channels.create({
+        name: `👥 Total : ${guild.memberCount}`,
+        type: ChannelType.GuildVoice,
+        parent: infoCategory.id,
+        permissionOverwrites: [
+          {
+            id: guild.id,
+            deny: ['Connect'],
+            allow: ['ViewChannel'],
+          },
+          {
+            id: guild.ownerId,
+            allow: ['Connect', 'ViewChannel', 'Speak'],
+          }
+        ],
+      });
+      logger.info("BOT", "Salon vocal '👥 Total' créé");
+    } else {
+      // Mettre à jour les permissions si le salon existe
+      await totalVocal.permissionOverwrites.set([
+        {
+          id: guild.id,
+          deny: ['Connect'],
+          allow: ['ViewChannel'],
+        },
+        {
+          id: guild.ownerId,
+          allow: ['Connect', 'ViewChannel', 'Speak'],
+        }
+      ]);
+    }
+
+    // Créer/Récupérer salon vocal 2: "🧷・.gg/haven"
+    let inviteVocal = guild.channels.cache.find(c => c.type === ChannelType.GuildVoice && c.name.includes('.gg/haven'));
+    
+    if (!inviteVocal) {
+      inviteVocal = await guild.channels.create({
+        name: '🧷・.gg/haven',
+        type: ChannelType.GuildVoice,
+        parent: infoCategory.id,
+        permissionOverwrites: [
+          {
+            id: guild.id,
+            deny: ['Connect'],
+            allow: ['ViewChannel'],
+          },
+          {
+            id: guild.ownerId,
+            allow: ['Connect', 'ViewChannel', 'Speak'],
+          }
+        ],
+      });
+      logger.info("BOT", "Salon vocal '🧷・.gg/haven' créé");
+    } else {
+      // Mettre à jour les permissions si le salon existe
+      await inviteVocal.permissionOverwrites.set([
+        {
+          id: guild.id,
+          deny: ['Connect'],
+          allow: ['ViewChannel'],
+        },
+        {
+          id: guild.ownerId,
+          allow: ['Connect', 'ViewChannel', 'Speak'],
+        }
+      ]);
+    }
+
+    logger.info("BOT", "Salons vocaux configurés avec succès");
+  } catch (err) {
+    logger.error("BOT", "Erreur lors de la création des salons vocaux", err);
+  }
+
+  // Update le nombre de gens en ligne toutes les 30 secondes
+  setInterval(async () => {
+    try {
+      const guild = client.guilds.cache.first();
+      if (!guild) return;
+
+      const onlineMembers = guild.members.cache.filter(m => m.presence?.status !== 'offline').size;
+      const totalVocal = guild.channels.cache.find(c => c.type === ChannelType.GuildVoice && c.name.startsWith('👥 Total'));
+      
+      if (totalVocal) {
+        await totalVocal.setName(`👥 Total : ${onlineMembers}`);
+      }
+    } catch (err) {
+      logger.debug("BOT", "Erreur lors de l'update du nombre en ligne", err.message);
+    }
+  }, 30000); // Toutes les 30 secondes
+});
+
 logger.info("BOT", "Tentative de connexion au serveur Discord...");
 client.login(process.env.DISCORD_TOKEN).catch(err => {
   logger.error("BOT", "Erreur lors de la connexion au serveur Discord", err);
