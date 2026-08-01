@@ -3244,7 +3244,7 @@ client.on("messageCreate", async (message) => {
               {
                 id: message.guild.id,
                 deny: ['Connect'],
-                allow: ['ViewChannel'],
+                allow: ['ViewChannel', 'Speak', 'Stream', 'UseVAD'],
               },
               {
                 id: message.author.id,
@@ -3266,7 +3266,7 @@ client.on("messageCreate", async (message) => {
               {
                 id: message.guild.id,
                 deny: ['Connect'],
-                allow: ['ViewChannel'],
+                allow: ['ViewChannel', 'Speak', 'Stream', 'UseVAD'],
               },
               {
                 id: message.author.id,
@@ -4350,7 +4350,7 @@ client.on('ready', async () => {
           {
             id: guild.id,
             deny: ['Connect'],
-            allow: ['ViewChannel'],
+            allow: ['ViewChannel', 'Speak', 'Stream', 'UseVAD'],
           },
           {
             id: guild.ownerId,
@@ -4367,7 +4367,7 @@ client.on('ready', async () => {
         {
           id: guild.id,
           deny: ['Connect'],
-          allow: ['ViewChannel'],
+          allow: ['ViewChannel', 'Speak', 'Stream', 'UseVAD'],
         },
         {
           id: guild.ownerId,
@@ -4389,7 +4389,7 @@ client.on('ready', async () => {
           {
             id: guild.id,
             deny: ['Connect'],
-            allow: ['ViewChannel'],
+            allow: ['ViewChannel', 'Speak', 'Stream', 'UseVAD'],
           },
           {
             id: guild.ownerId,
@@ -4406,7 +4406,7 @@ client.on('ready', async () => {
         {
           id: guild.id,
           deny: ['Connect'],
-          allow: ['ViewChannel'],
+          allow: ['ViewChannel', 'Speak', 'Stream', 'UseVAD'],
         },
         {
           id: guild.ownerId,
