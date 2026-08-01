@@ -3243,8 +3243,8 @@ client.on("messageCreate", async (message) => {
             permissionOverwrites: [
               {
                 id: message.guild.id,
-                deny: ['Connect'],
-                allow: ['ViewChannel'],
+                deny: ['ViewChannel', 'Connect'],
+                allow: [],
               },
               {
                 id: message.guild.ownerId,
@@ -3265,8 +3265,8 @@ client.on("messageCreate", async (message) => {
             permissionOverwrites: [
               {
                 id: message.guild.id,
-                deny: ['Connect'],
-                allow: ['ViewChannel'],
+                deny: ['ViewChannel', 'Connect'],
+                allow: [],
               },
               {
                 id: message.guild.ownerId,
@@ -4349,8 +4349,8 @@ client.on('ready', async () => {
         permissionOverwrites: [
           {
             id: guild.id,
-            deny: ['Connect'],
-            allow: ['ViewChannel'],
+            deny: ['ViewChannel', 'Connect'],
+            allow: [],
           },
           {
             id: guild.ownerId,
@@ -4366,8 +4366,8 @@ client.on('ready', async () => {
       await totalVocal.permissionOverwrites.set([
         {
           id: guild.id,
-          deny: ['Connect'],
-          allow: ['ViewChannel'],
+          deny: ['ViewChannel', 'Connect'],
+          allow: [],
         },
         {
           id: guild.ownerId,
@@ -4388,8 +4388,8 @@ client.on('ready', async () => {
         permissionOverwrites: [
           {
             id: guild.id,
-            deny: ['Connect'],
-            allow: ['ViewChannel'],
+            deny: ['ViewChannel', 'Connect'],
+            allow: [],
           },
           {
             id: guild.ownerId,
@@ -4405,8 +4405,8 @@ client.on('ready', async () => {
       await inviteVocal.permissionOverwrites.set([
         {
           id: guild.id,
-          deny: ['Connect'],
-          allow: ['ViewChannel'],
+          deny: ['ViewChannel', 'Connect'],
+          allow: [],
         },
         {
           id: guild.ownerId,
