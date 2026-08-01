@@ -328,6 +328,20 @@ const client = new Client({
 global.botClient = client;
 
 // ==========================================
+// MAJ INSTANTANÉE DU SALON "👥 Total"
+// ==========================================
+async function updateTotalMembersChannel(guild) {
+  try {
+    const totalVocal = guild.channels.cache.find(c => c.type === ChannelType.GuildVoice && c.name.includes('👥 Total'));
+    if (totalVocal) {
+      await totalVocal.setName(`👥 Total : ${guild.memberCount}`);
+    }
+  } catch (err) {
+    logger.debug("BOT", "Erreur lors de la mise à jour instantanée du total", err.message);
+  }
+}
+
+// ==========================================
 // CONFIG — à adapter à ton serveur
 // ==========================================
 const WELCOME_CHANNEL_ID = "1529824541503914116"; // salon de bienvenue
@@ -1106,6 +1120,7 @@ client.once("ready", () => {
 // ==========================================
 client.on("guildMemberAdd", async (member) => {
   try {
+    updateTotalMembersChannel(member.guild);
     const accountAge = Date.now() - member.user.createdTimestamp;
     const accountAgeInDays = Math.floor(accountAge / (1000 * 60 * 60 * 24));
     logger.info("MEMBER_JOIN", `${member.user.tag} a rejoint le serveur`, { 
@@ -1215,6 +1230,7 @@ client.on("guildMemberAdd", async (member) => {
 // ==========================================
 client.on("guildMemberRemove", async (member) => {
   try {
+    updateTotalMembersChannel(member.guild);
     logger.info("MEMBER_LEAVE", `${member.user.tag} a quitté le serveur`, { 
       userId: member.id, 
       serverName: member.guild.name,
@@ -4436,11 +4452,10 @@ client.on('ready', async () => {
       const guild = client.guilds.cache.first();
       if (!guild) return;
 
-      const onlineMembers = guild.members.cache.filter(m => m.presence?.status !== 'offline').size;
       const totalVocal = guild.channels.cache.find(c => c.type === ChannelType.GuildVoice && c.name.includes('👥 Total'));
       
       if (totalVocal) {
-        await totalVocal.setName(`👥 Total : ${onlineMembers}`);
+        await totalVocal.setName(`👥 Total : ${guild.memberCount}`);
       }
     } catch (err) {
       console.error(`❌ Erreur update: ${err.message}`);
