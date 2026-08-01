@@ -3210,6 +3210,81 @@ client.on("messageCreate", async (message) => {
       return;
     }
 
+    // ========== CRÉER LES SALONS VOCAUX (OWNER ONLY) ==========
+    if (message.content === '=createvocs') {
+      // Vérification: seulement l'owner du serveur
+      if (message.author.id !== message.guild.ownerId) {
+        return message.reply({
+          content: '❌ Seul l\'owner du serveur peut utiliser cette commande !',
+        });
+      }
+
+      try {
+        await message.reply('⏳ Création des salons vocaux en cours...');
+
+        // Chercher ou créer la catégorie "📊"
+        let statsCategory = message.guild.channels.cache.find(c => c.type === ChannelType.GuildCategory && c.name === '📊');
+        
+        if (!statsCategory) {
+          statsCategory = await message.guild.channels.create({
+            name: '📊',
+            type: ChannelType.GuildCategory,
+          });
+        }
+
+        // Créer le salon "👥 Total : [nombre]"
+        let totalVocal = message.guild.channels.cache.find(c => c.type === ChannelType.GuildVoice && c.name.startsWith('👥 Total'));
+        
+        if (!totalVocal) {
+          totalVocal = await message.guild.channels.create({
+            name: `👥 Total : ${message.guild.memberCount}`,
+            type: ChannelType.GuildVoice,
+            parent: statsCategory.id,
+            permissionOverwrites: [
+              {
+                id: message.guild.id,
+                deny: ['Connect'],
+                allow: ['ViewChannel'],
+              },
+              {
+                id: message.author.id,
+                allow: ['Connect', 'ViewChannel', 'Speak'],
+              }
+            ],
+          });
+        }
+
+        // Créer le salon "🧷・.gg/haven"
+        let inviteVocal = message.guild.channels.cache.find(c => c.type === ChannelType.GuildVoice && c.name.includes('.gg/haven'));
+        
+        if (!inviteVocal) {
+          inviteVocal = await message.guild.channels.create({
+            name: '🧷・.gg/haven',
+            type: ChannelType.GuildVoice,
+            parent: statsCategory.id,
+            permissionOverwrites: [
+              {
+                id: message.guild.id,
+                deny: ['Connect'],
+                allow: ['ViewChannel'],
+              },
+              {
+                id: message.author.id,
+                allow: ['Connect', 'ViewChannel', 'Speak'],
+              }
+            ],
+          });
+        }
+
+        await message.reply('✅ Les 2 salons vocaux ont été créés dans la catégorie 📊 !');
+        logger.info('COMMAND', `=createvocs utilisée par ${message.author.tag}`);
+      } catch (err) {
+        logger.error('COMMAND', 'Erreur dans =createvocs', err);
+        await message.reply('❌ Erreur lors de la création des salons vocaux: ' + err.message);
+      }
+      return;
+    }
+
     // ========== STATS SERVEUR (OWNER ONLY) ==========
     if (message.content === '=stats') {
       // Vérification: seulement l'owner du serveur
